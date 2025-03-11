@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f0f0, #d3d3d3, #b0b0b0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 450px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container h2 {
+            margin-bottom: 25px;
+            font-size: 26px;
+            color: #444;
+        }
+
+        .container input {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+        }
+
+        .container button {
+            padding: 14px 24px;
+            margin: 12px 5px;
+            border: none;
+            border-radius: 10px;
+            background-color: #667eea;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .container button:hover {
+            background-color: #5a6fd1;
+            transform: translateY(-2px);
+        }
+
+        .container a {
+            display: block;
+            margin-top: 12px;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .container a:hover {
+            color: #5a6fd1;
+        }
+
+        .form-container {
+            display: none;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .toggle-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .toggle-buttons button {
+            flex: 1;
+            background-color: #667eea;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .toggle-buttons button.active {
+            background-color: #5a6fd1;
+        }
+
+        .toggle-buttons button:not(.active):hover {
+            background-color: #5a6fd1;
+            transform: translateY(-2px);
+        }
+
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 15px 0;
+        }
+
+        .captcha-container .captcha-code {
+            font-size: 20px;
+            font-weight: bold;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .captcha-container .refresh-captcha {
+            cursor: pointer;
+            font-size: 20px;
+            margin-left: 10px;
+            color: #667eea;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .captcha-container .refresh-captcha:hover {
+            color: #5a6fd1;
+            transform: rotate(90deg);
+        }
+
+        /* Checkbox Styling */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .checkbox-container input {
+            margin-right: 10px;
+            cursor: pointer;
+            width: 16px; /* Smaller checkbox */
+            height: 16px; /* Smaller checkbox */
+        }
+
+        .checkbox-container label {
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        /* Role Selection Dropdown */
+        .role-selection {
+            margin: 15px 0;
+            text-align: left;
+        }
+
+        .role-selection label {
+            font-size: 16px;
+            color: #444;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .role-selection select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .role-selection select:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="toggle-buttons">
+            <button onclick="showForm('signin')" id="signinBtn" class="active">Sign In</button>
+            <button onclick="showForm('signup')" id="signupBtn">Sign Up</button>
+        </div>
+        
+        <div id="signinForm" class="form-container active">
+            <h2>Sign In</h2>
+            <form id="signinFormElement">
+                <input type="text" id="mobile" placeholder="📌 Mobile" required>
+                <input type="password" id="password" placeholder="📍 Password" required>
+                
+                <!-- Captcha Section -->
+                <div class="captcha-container">
+                    <div class="captcha-code" id="captchaCode"></div>
+                    <div class="refresh-captcha" onclick="generateCaptcha()">🔄</div>
+                </div>
+                <input type="text" id="captchaInput" placeholder="📎 Enter Captcha" required>
+                
+                <!-- Checkbox and Label in the same line -->
+                <div class="checkbox-container">
+                    <input type="checkbox" id="instructions">
+                    <label for="instructions">I Have Read the Instructions</label>
+                </div>
+
+                <!-- Role Selection Dropdown -->
+                <div class="role-selection">
+                    <label for="role">Who is logging in?</label>
+                    <select id="role" required>
+                        <option value="" disabled selected>Select your role</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Faculty">Faculty</option>
+                        <option value="Student">Student</option>
+                        <option value="Parent">Parent</option>
+                    </select>
+                </div>
+                
+                <button type="submit">Sign In</button>
+            </form>
+            <a href="#">Forget Password?</a>
+        </div>
+
+        <div id="signupForm" class="form-container">
+            <h2>Sign Up</h2>
+            <form>
+                <input type="text" placeholder="📌 Full Name" required>
+                <input type="text" placeholder="📌 Mobile" required>
+                <input type="email" placeholder="📌 Email" required>
+                <input type="password" placeholder="📍 Password" required>
+                <input type="password" placeholder="📍 Confirm Password" required>
+                
+                <!-- Checkbox and Label in the same line -->
+                <div class="checkbox-container">
+                    <input type="checkbox" id="terms">
+                    <label for="terms">I Agree to the Terms and Conditions</label>
+                </div>
+                
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Generate Captcha
+        function generateCaptcha() {
+            const captchaCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+            document.getElementById('captchaCode').innerText = captchaCode;
+        }
+
+        // Initialize Captcha on page load
+        generateCaptcha();
+
+        // Handle Sign In Form Submission
+        document.getElementById('signinFormElement').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get user inputs
+            const mobile = document.getElementById('mobile').value;
+            const password = document.getElementById('password').value;
+            const captchaInput = document.getElementById('captchaInput').value;
+            const captchaCode = document.getElementById('captchaCode').innerText;
+            const role = document.getElementById('role').value;
+
+            // Basic validation
+            if (!mobile || !password || !captchaInput || !role) {
+                alert('Please fill in all fields and select a role.');
+                return;
+            }
+
+            // Validate Captcha
+            if (captchaInput !== captchaCode) {
+                alert('Invalid Captcha. Please try again.');
+                generateCaptcha(); // Regenerate captcha
+                return;
+            }
+
+            // Simulate successful sign-in
+            alert(`Sign In Successful! You are logging in as: ${role}`);
+            window.location.href = 'index.html'; // Redirect to index.html (or any other page)
+        });
+
+        // Toggle between Sign In and Sign Up forms
+        function showForm(formType) {
+            const signinForm = document.getElementById('signinForm');
+            const signupForm = document.getElementById('signupForm');
+            const signinBtn = document.getElementById('signinBtn');
+            const signupBtn = document.getElementById('signupBtn');
+
+            if (formType === 'signin') {
+                signinForm.classList.add('active');
+                signupForm.classList.remove('active');
+                signinBtn.classList.add('active');
+                signupBtn.classList.remove('active');
+            } else if (formType === 'signup') {
+                signupForm.classList.add('active');
+                signinForm.classList.remove('active');
+                signupBtn.classList.add('active');
+                signinBtn.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>

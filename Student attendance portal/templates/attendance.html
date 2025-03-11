@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance - Attendance Management System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+    <div class="flex">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="bg-gray-800 text-white w-64 min-h-screen p-4 transition-all duration-300">
+            <div class="sidebar-header mb-6">
+                <h3 class="text-2xl font-bold">Student Attendance Portal</h3>
+            </div>
+            <ul class="space-y-2">
+                <li>
+                    <a href="index.html" class="flex items-center p-2 hover:bg-gray-700 rounded">
+                        <i class="fas fa-home mr-2"></i> Home
+                    </a>
+                </li>
+                <li>
+                    <a href="students.html" class="flex items-center p-2 hover:bg-gray-700 rounded">
+                        <i class="fas fa-user-graduate mr-2"></i> Students
+                    </a>
+                </li>
+                <li>
+                    <a href="classes.html" class="flex items-center p-2 hover:bg-gray-700 rounded">
+                        <i class="fas fa-chalkboard mr-2"></i> Classes
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="attendance.html" class="flex items-center p-2 bg-gray-700 rounded">
+                        <i class="fas fa-clipboard-list mr-2"></i> Attendance
+                    </a>
+                </li>
+                <li>
+                    <a href="reports.html" class="flex items-center p-2 hover:bg-gray-700 rounded">
+                        <i class="fas fa-chart-bar mr-2"></i> Reports
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content" class="flex-1 p-6">
+            <nav class="bg-white dark:bg-gray-800 shadow-md p-4 mb-6 rounded-lg flex justify-between items-center">
+                <button type="button" id="sidebarCollapse" class="text-gray-500 dark:text-gray-300 hover:text-gray-700">
+                    <i class="fas fa-align-left text-xl"></i>
+                </button>
+                <div class="user-info flex items-center">
+                    <span class="text-gray-700 dark:text-gray-300 mr-4">Welcome, Vikas</span>
+                    <a href="login.html" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Logout</a>
+                </div>
+            </nav>
+
+            <div class="container mx-auto">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Attendance Management</h2>
+                
+                <!-- Take Attendance Section -->
+                <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-xl font-semibold text-gray-800 dark:text-white">
+                            <i class="fas fa-clipboard-check mr-2"></i> Take Attendance
+                        </div>
+                    </div>
+                    <form id="attendance-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="form-group">
+                                <label for="attendanceDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date</label>
+                                <input type="date" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" id="attendanceDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="classSelect" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Select Class</label>
+                                <select class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" id="classSelect" required>
+                                    <option value="">-- Select Class --</option>
+                                    <option value="Data Structures">Data Structures</option>
+                                    <option value="Algorithms">Algorithms</option>
+                                    <option value="Database Systems">Database Systems</option>
+                                    <option value="Operating Systems">Operating Systems</option>
+                                    <option value="Computer Networks">Computer Networks</option>
+                                    <option value="Software Engineering">Software Engineering</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Load Students</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Attendance Table -->
+                <div id="attendance-container" class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-6 hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-xl font-semibold text-gray-800 dark:text-white">
+                            <i class="fas fa-users mr-2"></i> <span id="attendance-class-info">Students List</span>
+                        </div>
+                        <button id="save-attendance" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+                            <i class="fas fa-save mr-2"></i> Save Attendance
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white dark:bg-gray-700">
+                            <thead class="bg-gray-200 dark:bg-gray-600">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Roll No</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Attendance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-attendance-list" class="divide-y divide-gray-200 dark:divide-gray-600">
+                                <!-- Student data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recent Attendance Records -->
+                <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-xl font-semibold text-gray-800 dark:text-white">
+                            <i class="fas fa-history mr-2"></i> Recent Attendance Records
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Attendance Records Table -->
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white dark:bg-gray-700">
+                                <thead class="bg-gray-200 dark:bg-gray-600">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Class</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Present</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Absent</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attendance-history" class="divide-y divide-gray-200 dark:divide-gray-600">
+                                    <!-- Example Recent Attendance Records -->
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">2023-10-01</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Data Structures</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">45</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">30</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                            <button class="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600" onclick="viewAttendanceDetails(1)">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 ml-2" onclick="deleteAttendanceRecord(1)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">2023-10-02</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Algorithms</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">55</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">20</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                            <button class="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600" onclick="viewAttendanceDetails(2)">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 ml-2" onclick="deleteAttendanceRecord(2)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">2023-10-03</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Database Systems</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">40</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">35</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                            <button class="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600" onclick="viewAttendanceDetails(3)">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 ml-2" onclick="deleteAttendanceRecord(3)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pie Chart -->
+                        <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+                            <div class="text-xl font-semibold text-gray-800 dark:text-white mb-6">
+                                <i class="fas fa-chart-pie mr-2"></i> Attendance Overview
+                            </div>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="attendancePieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Attendance Details Modal -->
+    <div id="viewAttendanceModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
+        <div class="modal-dialog bg-white dark:bg-gray-800 rounded-lg shadow-lg w-11/12 md:w-3/4 mx-auto my-12 p-6">
+            <div class="modal-header flex justify-between items-center mb-6">
+                <h5 class="text-xl font-bold text-gray-800 dark:text-white">Attendance Details</h5>
+                <button type="button" class="text-gray-500 hover:text-gray-700" onclick="closeViewAttendanceModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="attendance-info mb-6">
+                    <p class="text-gray-700 dark:text-gray-300"><strong>Date: </strong><span id="modal-date"></span></p>
+                    <p class="text-gray-700 dark:text-gray-300"><strong>Class: </strong><span id="modal-class"></span></p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white dark:bg-gray-700">
+                        <thead class="bg-gray-200 dark:bg-gray-600">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Student Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Roll No</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-details" class="divide-y divide-gray-200 dark:divide-gray-600">
+                            <!-- Attendance details will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer flex justify-end">
+                <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600" onclick="closeViewAttendanceModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pie Chart Configuration
+        const pieCtx = document.getElementById('attendancePieChart').getContext('2d');
+        const attendancePieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Present', 'Absent'],
+                datasets: [{
+                    data: [60, 15], // Example data
+                    backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Attendance Overview'
+                    }
+                }
+            }
+        });
+
+        // JavaScript Functions for Modals
+        function viewAttendanceDetails(id) {
+            // Fetch attendance details by ID and populate the modal
+            document.getElementById('viewAttendanceModal').classList.remove('hidden');
+        }
+
+        function closeViewAttendanceModal() {
+            document.getElementById('viewAttendanceModal').classList.add('hidden');
+        }
+
+        function deleteAttendanceRecord(id) {
+            // Delete attendance record logic
+            alert(`Delete record with ID: ${id}`);
+        }
+            $(document).ready(function() {
+                $('#attendance-form').submit(function(e) {
+                    e.preventDefault();
+                    const attendanceData = {
+                        date: $('#attendanceDate').val(),
+                        class_id: $('#classSelect').val(),
+                        students: []
+                    };
+                    $('#students-attendance-list tr').each(function() {
+                        const studentId = $(this).find('td:first').text();
+                        const status = $(this).find('select').val();
+                        attendanceData.students.push({ studentId, status });
+                    });
+                    $.ajax({
+                        url: '/api/attendance',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(attendanceData),
+                        success: function(response) {
+                            alert(response.message);
+                            location.reload();
+                        }
+                    });
+                });
+            });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/attendance.js"></script>
+</body>
+</html>

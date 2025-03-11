@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classes - Attendance Management System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+    <div class="flex">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="bg-gray-800 text-white w-64 min-h-screen p-4 transition-all duration-300">
+            <div class="sidebar-header mb-6">
+                <h3 class="text-2xl font-bold">Student Attendance Portal</h3>
+            </div>
+            <ul class="space-y-2">
+                <li>
+                    <a href="index.html" class="flex items-center p-2 hover:bg-gray-700 rounded">
+                        <i class="fas fa-home mr-2"></i> Home
+                    </a>
+                </li>
+                <li>
+                    <a href="students.html" class="flex items-center p-2 hover:bg-gray-700 rounded">
+                        <i class="fas fa-user-graduate mr-2"></i> Students
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="classes.html" class="flex items-center p-2 bg-gray-700 rounded">
+                        <i class="fas fa-chalkboard mr-2"></i> Classes
+                    </a>
+                </li>
+                <li>
+                    <a href="attendance.html" class="flex items-center p-2 hover:bg-gray-700 rounded">
+                        <i class="fas fa-clipboard-list mr-2"></i> Attendance
+                    </a>
+                </li>
+                <li>
+                    <a href="reports.html" class="flex items-center p-2 hover:bg-gray-700 rounded">
+                        <i class="fas fa-chart-bar mr-2"></i> Reports
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content" class="flex-1 p-6">
+            <nav class="bg-white dark:bg-gray-800 shadow-md p-4 mb-6 rounded-lg flex justify-between items-center">
+                <button type="button" id="sidebarCollapse" class="text-gray-500 dark:text-gray-300 hover:text-gray-700">
+                    <i class="fas fa-align-left text-xl"></i>
+                </button>
+                <div class="user-info flex items-center">
+                    <span class="text-gray-700 dark:text-gray-300 mr-4">Welcome, Vikas</span>
+                    <a href="login.html" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Logout</a>
+                </div>
+            </nav>
+
+            <div class="container mx-auto">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Class Management</h2>
+                
+                <!-- Classes List -->
+                <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-xl font-semibold text-gray-800 dark:text-white">
+                            <i class="fas fa-chalkboard mr-2"></i> Classes List
+                        </div>
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" onclick="openAddClassModal()">
+                            <i class="fas fa-plus mr-2"></i> Add New Class
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white dark:bg-gray-700">
+                            <thead class="bg-gray-200 dark:bg-gray-600">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Class Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Teacher</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Total Students</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="classes-list" class="divide-y divide-gray-200 dark:divide-gray-600">
+                                <!-- Example BTech CSE Classes -->
+                                <tr>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">1</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Data Structures</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Prof. Isha Gupta </td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">60</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                        <button class="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600" onclick="openEditClassModal(1)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 ml-2" onclick="deleteClass(1)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">2</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Algorithms</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Prof. Archana Singh</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">55</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                        <button class="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600" onclick="openEditClassModal(2)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 ml-2" onclick="deleteClass(2)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">3</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Database Systems</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Prof. Sashi Prabha</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">50</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                        <button class="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600" onclick="openEditClassModal(3)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 ml-2" onclick="deleteClass(3)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">4</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Operating Systems</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Prof. Pradeep Tomar</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">65</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                        <button class="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600" onclick="openEditClassModal(4)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 ml-2" onclick="deleteClass(4)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">5</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Computer Networks</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Prof. Bhavna Yadav</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">70</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                        <button class="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600" onclick="openEditClassModal(5)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 ml-2" onclick="deleteClass(5)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">6</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Cyber Security</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Prof. Sonu Kumar</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">45</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                        <button class="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600" onclick="openEditClassModal(6)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 ml-2" onclick="deleteClass(6)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Class Modal -->
+    <div id="addClassModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
+        <div class="modal-dialog bg-white dark:bg-gray-800 rounded-lg shadow-lg w-11/12 md:w-1/2 mx-auto my-12 p-6">
+            <div class="modal-header flex justify-between items-center mb-6">
+                <h5 class="text-xl font-bold text-gray-800 dark:text-white">Add New Class</h5>
+                <button type="button" class="text-gray-500 hover:text-gray-700" onclick="closeAddClassModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addClassForm" class="space-y-4">
+                    <div class="form-group">
+                        <label for="className" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Class Name</label>
+                        <input type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" id="className" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="teacherName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Teacher Name</label>
+                        <input type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" id="teacherName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalStudents" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Total Students</label>
+                        <input type="number" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" id="totalStudents" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer flex justify-end space-x-4">
+                <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600" onclick="closeAddClassModal()">Close</button>
+                <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" onclick="saveClass()">Save Class</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Class Modal -->
+    <div id="editClassModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
+        <div class="modal-dialog bg-white dark:bg-gray-800 rounded-lg shadow-lg w-11/12 md:w-1/2 mx-auto my-12 p-6">
+            <div class="modal-header flex justify-between items-center mb-6">
+                <h5 class="text-xl font-bold text-gray-800 dark:text-white">Edit Class</h5>
+                <button type="button" class="text-gray-500 hover:text-gray-700" onclick="closeEditClassModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editClassForm" class="space-y-4">
+                    <input type="hidden" id="editClassId">
+                    <div class="form-group">
+                        <label for="editClassName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Class Name</label>
+                        <input type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" id="editClassName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTeacherName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Teacher Name</label>
+                        <input type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" id="editTeacherName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTotalStudents" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Total Students</label>
+                        <input type="number" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" id="editTotalStudents" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer flex justify-end space-x-4">
+                <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600" onclick="closeEditClassModal()">Close</button>
+                <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" onclick="updateClass()">Update Class</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Functions for Modals and CRUD Operations
+        function openAddClassModal() {
+            document.getElementById('addClassModal').classList.remove('hidden');
+        }
+
+        function closeAddClassModal() {
+            document.getElementById('addClassModal').classList.add('hidden');
+        }
+
+        function openEditClassModal(id) {
+            // Fetch class data by ID and populate the form
+            document.getElementById('editClassModal').classList.remove('hidden');
+        }
+
+        function closeEditClassModal() {
+            document.getElementById('editClassModal').classList.add('hidden');
+        }
+
+        function saveClass() {
+            // Save class logic
+            closeAddClassModal();
+        }
+
+        function updateClass() {
+            // Update class logic
+            closeEditClassModal();
+        }
+
+        function deleteClass(id) {
+            // Delete class logic
+        }
+            $(document).ready(function() {
+                $('#addClassForm').submit(function(e) {
+                    e.preventDefault();
+                    const classData = {
+                        name: $('#className').val(),
+                        teacher: $('#teacherName').val(),
+                        totalStudents: $('#totalStudents').val()
+                    };
+                    $.ajax({
+                        url: '/api/classes',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(classData),
+                        success: function(response) {
+                            alert(response.message);
+                            location.reload();
+                        }
+                    });
+                });
+            });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/classes.js"></script>
+</body>
+</html>

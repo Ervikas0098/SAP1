@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Attendance Management System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+    <div class="flex">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="bg-gray-800 text-white w-64 min-h-screen p-4 transition-all duration-300">
+            <div class="sidebar-header mb-6">
+                <h3 class="text-2xl font-bold">Student Attendance Portal</h3>
+            </div>
+            <ul class="space-y-2">
+                <li class="active">
+                    <a href="index.html" class="flex items-center p-2 bg-gray-700 rounded">
+                        <i class="fas fa-home mr-2"></i> Home
+                    </a>
+                </li>
+                <li>
+                    <a href="students.html" class="flex items-center p-2 hover:bg-gray-700 rounded">
+                        <i class="fas fa-user-graduate mr-2"></i> Students
+                    </a>
+                </li>
+                <li>
+                    <a href="classes.html" class="flex items-center p-2 hover:bg-gray-700 rounded">
+                        <i class="fas fa-chalkboard mr-2"></i> Classes
+                    </a>
+                </li>
+                <li>
+                    <a href="attendance.html" class="flex items-center p-2 hover:bg-gray-700 rounded">
+                        <i class="fas fa-clipboard-list mr-2"></i> Attendance
+                    </a>
+                </li>
+                <li>
+                    <a href="reports.html" class="flex items-center p-2 hover:bg-gray-700 rounded">
+                        <i class="fas fa-chart-bar mr-2"></i> Reports
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content" class="flex-1 p-6">
+            <nav class="bg-white dark:bg-gray-800 shadow-md p-4 mb-6 rounded-lg flex justify-between items-center">
+                <button type="button" id="sidebarCollapse" class="text-gray-500 dark:text-gray-300 hover:text-gray-700">
+                    <i class="fas fa-align-left text-xl"></i>
+                </button>
+                <div class="user-info flex items-center">
+                    <span class="text-gray-700 dark:text-gray-300 mr-4">Welcome, Vikas</span>
+                    <a href="login.html" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Logout</a>
+                </div>
+            </nav>
+
+            <div class="container mx-auto">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Dashboard</h2>
+                
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-blue-500 text-white p-6 rounded-lg shadow-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-users text-3xl mr-4"></i>
+                            <div>
+                                <p class="text-lg font-semibold">Total Students</p>
+                                <p class="text-2xl" id="total-students">75</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-green-500 text-white p-6 rounded-lg shadow-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-chalkboard text-3xl mr-4"></i>
+                            <div>
+                                <p class="text-lg font-semibold">Total Classes</p>
+                                <p class="text-2xl" id="total-classes">6</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-purple-500 text-white p-6 rounded-lg shadow-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-clipboard-list text-3xl mr-4"></i>
+                            <div>
+                                <p class="text-lg font-semibold">Attendance Taken</p>
+                                <p class="text-2xl" id="attendance-taken">54</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance Statistics Chart -->
+                <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+                    <div class="text-xl font-semibold text-gray-800 dark:text-white mb-6">
+                        <i class="fas fa-chart-bar mr-2"></i> Attendance Statistics
+                    </div>
+                    <div class="chart-container" style="position: relative; height: 400px;">
+                        <canvas id="attendanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-xl font-semibold text-gray-800 dark:text-white">
+                            <i class="fas fa-history mr-2"></i> Recent Activity
+                        </div>
+                        <a href="reports.html" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">View All</a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white dark:bg-gray-700">
+                            <thead class="bg-gray-200 dark:bg-gray-600">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Activity</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-activity" class="divide-y divide-gray-200 dark:divide-gray-600">
+                                <!-- Recent activity will be loaded here -->
+                                <tr>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">2023-10-01</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Attendance Taken</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Data Structures - 55 Present, 20 Absent</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">2023-10-02</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">New Student Added</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">Vikas Kumar Gautam - Roll No: 235/LCS/003</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js Configuration for Attendance Statistics
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        const attendanceChart = new Chart(ctx, {
+            type: 'bar', // Bar chart
+            data: {
+                labels: ['Data Structures', 'Algorithms', 'Database Systems', 'Operating Systems', 'Computer Networks', 'Software Engineering'],
+                datasets: [{
+                    label: 'Present',
+                    data: [25, 30, 28, 32, 27, 29], // Example data
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Absent',
+                    data: [5, 2, 4, 3, 6, 4], // Example data
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Prevent chart from resizing
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Students'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Subjects'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Attendance Statistics by Subject'
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>
